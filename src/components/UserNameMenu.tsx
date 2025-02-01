@@ -28,6 +28,16 @@ const UserNameMenu = () => {
             User Profile
           </Link>
         </DropdownMenuItem>
+
+        <DropdownMenuItem>
+          <Link
+            to={"/manage-restaurant"}
+            className="font-bold hover:text-orange-500"
+          >
+            Restaurant
+          </Link>
+        </DropdownMenuItem>
+
         <Separator />
         <DropdownMenuItem>
           <Button className="flex flex-1 font-bold bg-red-500" onClick={() => logout()}>Logout</Button>

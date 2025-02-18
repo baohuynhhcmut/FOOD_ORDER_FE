@@ -1,3 +1,5 @@
+import { searchForm } from "@/components/SearchBar"
+import { searchRespone, SearchState } from "@/type"
 import { useAuth0 } from "@auth0/auth0-react"
 import { useMutation, useQuery } from "react-query"
 import { toast } from "sonner"
@@ -112,4 +114,36 @@ export const useUpdateMyRestaurant = () => {
         updateRestaurant,
         isLoading
       }
+}
+
+
+export const useSearchRestaurant = (searchQuery:SearchState,city:string) => {
+
+    const searchRestaurant = async() : Promise<searchRespone> => {
+
+        const params = new URLSearchParams()
+        params.set('searchQuery',searchQuery.searchQuery)
+        params.set('page',searchQuery.page.toString())
+        params.set('selectedCuisines',searchQuery.cuisines.join(","))
+        params.set('sortOption',searchQuery.sortOption)
+
+
+        const respone = await fetch(`${BASE_API_URL}/api/restaurant/search/${city}?${params.toString()}`)
+
+        if(!respone.ok){
+            throw new Error('Faild to get restaurant')
+        }
+        return respone.json()
+    }
+
+    const { 
+        data,
+        isError,
+        isLoading
+    } = useQuery(['restaurant',searchQuery],searchRestaurant,{enabled:!!city})
+
+
+    return {
+        data,isLoading,isError
+    }
 }

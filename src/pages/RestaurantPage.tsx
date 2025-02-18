@@ -6,9 +6,17 @@ const RestaurantPage = () => {
 
     const { createRestaurant,isLoading:isCreateLoading } = useCreateRestaurant()
 
-    const { restaurant } = useGetRestaurant()
+    const { restaurant,isLoading:isGetLoading } = useGetRestaurant()
     
     const { updateRestaurant,isLoading:isUpdateLoading} = useUpdateMyRestaurant()
+
+    if(isGetLoading){
+        return(
+            <>
+                <h2 className="text-2xl text-orange-500">Loading data...</h2>
+            </>
+        )
+    }
 
     const isEditting = !!restaurant
 

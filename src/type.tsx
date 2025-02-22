@@ -1,5 +1,6 @@
 
-type menuItem = {
+export type menuItem = {
+    _id:string;
     name:string;
     price:number;
 }
@@ -34,3 +35,28 @@ export type SearchState = {
     cuisines: string[];
     sortOption:string;
 }
+
+export type CartItem = {
+    _id:string;
+    name:string;
+    price:number;
+    quantity:number;
+}
+
+
+export type CheckoutSessionRequest = {
+    cartItems: {
+      _id: string;
+      name: string;
+      quantity: number;
+    }[];
+    deliveryDetail: {
+      name: string;
+      addressLine1: string;
+      city: string;
+      country: string;
+      email?: string | undefined;
+    };
+    restaurantId: string;
+};
+

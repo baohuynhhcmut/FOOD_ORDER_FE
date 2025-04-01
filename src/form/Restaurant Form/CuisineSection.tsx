@@ -17,7 +17,7 @@ const CuisineSection = () => {
                 </FormDescription>
                 <FormField 
                     control={control}
-                    name='cuisine'
+                    name='cuisines'
                     render={({ field }) => (
                         <FormItem>
                             <div className="grid  md:grid-cols-3 lg:grid-cols-6 gap-1">

@@ -121,3 +121,4 @@ const RestaurantDetailPage = () => {
 };
 
 export default RestaurantDetailPage;
+  

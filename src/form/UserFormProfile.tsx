@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
+import { provider } from "@/firebase";
+
 
 const formSchema = z.object({
   email: z.string().optional(),
@@ -22,39 +24,49 @@ const formSchema = z.object({
   }),
   addressLine1: z.string().min(1, "Address Line 1 is required"),
   city: z.string().min(1, "City is require"),
-  country: z.string().min(1, "Country is require"),
+  phoneNumber: z.string().min(1, "Country is require"),
+  provider:z.string().optional()
 });
 
 export type userFormData = z.infer<typeof formSchema>;
 
 type Props = {
-  onSave: (userProfileData: userFormData) => void;
+  onSave: (userProfileData: userFormData) => any;
   isLoading: boolean;
   user: userFormData;
   title?:string;
   buttonText?: string;
 };
 
-const UserFormProfile = ({ onSave, isLoading,user,title='User Profile Form',buttonText='Submit' }: Props) => {
+
+const UserFormProfile = ({ onSave, isLoading,user,title='Thông tin cá nhân',buttonText='Thay đổi' }: Props) => {
   const form = useForm<userFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: user
   });
 
   useEffect(() => {
+    
     form.reset(user)
   },[form,user])
+
+
+  // useEffect(() => {
+  //   if(onSave?.status == 200){
+  //     form.reset(onSave?.data)
+  //   }
+  // },[onSave,form])
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSave)}
-        className="space-y-4 bg-gray-50 rounded-lg md:p-10"
+        className="space-y-4 bg-gray-100 rounded-lg md:p-10 max-w-7xl mx-auto p-10 md:p-0"
       >
         <div>
           <h2 className="font-bold text-2xl ">{title}</h2>
           <FormDescription>
-            View and change your profile information here
+            Bạn có thể xem và thay đổi thông tin của mình tại đây
           </FormDescription>
         </div>
 
@@ -71,12 +83,27 @@ const UserFormProfile = ({ onSave, isLoading,user,title='User Profile Form',butt
           )}
         />
 
+          <FormField
+            control={form.control}
+            name="phoneNumber"
+            render={({ field }) => (
+                <FormItem className="flex-1">
+                <FormLabel>Số điện thoại</FormLabel>
+                <FormControl>
+                    <Input placeholder="0386xxxxxxx" {...field}  className="bg-white" />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+          />
+
+
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Họ và tên</FormLabel>
               <FormControl>
                 <Input placeholder="Tran Van A" {...field}  className="bg-white" />
               </FormControl>
@@ -92,7 +119,7 @@ const UserFormProfile = ({ onSave, isLoading,user,title='User Profile Form',butt
             name="addressLine1"
             render={({ field }) => (
                 <FormItem className="flex-1">
-                <FormLabel>Address Line 1</FormLabel>
+                <FormLabel>Địa chỉ nhà</FormLabel>
                 <FormControl>
                     <Input placeholder="123 Dinh Van Hung street ..." {...field}  className="bg-white" />
                 </FormControl>
@@ -106,7 +133,7 @@ const UserFormProfile = ({ onSave, isLoading,user,title='User Profile Form',butt
                 name="city"
                 render={({ field }) => (
                     <FormItem className="flex-1">
-                    <FormLabel>City</FormLabel>
+                    <FormLabel>Thành phố</FormLabel>
                     <FormControl>
                         <Input placeholder="Thu Duc City" {...field}  className="bg-white" />
                     </FormControl>
@@ -115,23 +142,13 @@ const UserFormProfile = ({ onSave, isLoading,user,title='User Profile Form',butt
             )}
             />
 
-            <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                    <FormItem className="flex-1">
-                    <FormLabel>Country</FormLabel>
-                    <FormControl>
-                        <Input placeholder="Viet Nam" {...field}  className="bg-white" />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-            />
 
         </div>
-        
-        {isLoading ? <LoadingButton /> : <Button type="submit" className="bg-orange-500">{buttonText}</Button>}
+          
+        <div className="flex items-center gap-x-2">
+          {isLoading ? <LoadingButton /> : <Button disabled={!form.formState.isDirty} type="submit" className="bg-orange-500">{buttonText}</Button>}
+          {!user?.provider && <Button onClick={() => console.log(1)} className="bg-red-500">Đổi mật khẩu</Button>}
+        </div>
         
       </form>
     </Form>

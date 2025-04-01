@@ -1,30 +1,48 @@
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 const ImageSection = () => {
 
     const { control , watch} = useFormContext()
     
+    const [imagePreview,setImagePreview] = useState<string|undefined>()
+
     const existImage = watch('imageUrl')
 
+    const handleFileChange = (e:any) => {
+        const file = e.target.files[0]
+        setImagePreview(URL.createObjectURL(file))
+    }
+      
+  
     return (
       <div className="space-y-2">
         <div>
-          <h2 className="text-2xl font-bold">Image</h2>
-          <FormDescription>Add your restaurant image</FormDescription>
+          <h2 className="text-2xl font-bold">Ảnh nhà hàng</h2>
+          <FormDescription>Thêm ảnh nhà hàng của bạn</FormDescription>
         </div>
-        <div className="flex flex-col gap-16 w-[50%]">
-            <div className="md:w-[50%] w-[100%]">
-                {existImage && 
-                    <>
-                        <AspectRatio ratio={16 / 9}>
-                            <img src={existImage} alt="Image" className="rounded-md object-cover" />
-                        </AspectRatio>
-                    </>
-                }
-            </div>
+        <div className="flex flex-col gap-y-16 w-[50%]">
+            {imagePreview ? (
+              <> 
+                  <div className="md:w-[400px] md:h-[400px] w-40 h-40">
+                      <>
+                        <img src={imagePreview} alt="Image" className="h-full w-full rounded-md object-cover" />
+                      </>
+                  </div>
+              </>
+            ):(
+              <> 
+                  {existImage && 
+                    <div className="md:w-[400px] md:h-[400px] w-40 h-40 ">
+                            <>
+                              <img src={existImage} alt="Image" className="h-full w-full rounded-md object-cover" />
+                            </>
+                    </div>
+                  }
+              </>
+            )}
           <FormField
             name="imageFile"
             control={control}
@@ -34,7 +52,10 @@ const ImageSection = () => {
                   <Input
                     className="bg-white"
                     type="file"
-                    onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}
+                    onChange={(e) => {
+                      field.onChange(e.target.files ? e.target.files[0] : null)
+                      handleFileChange(e)
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

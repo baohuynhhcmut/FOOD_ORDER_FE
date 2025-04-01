@@ -20,14 +20,11 @@ type Props = {
     onSubmit: (formData: searchForm) => void;
     placeHolder: string,
     onReset?: () => void;
-    searchQuery: string;
+    searchQuery?: string;
 }
 
 
-
-const SearchBar = ({onSubmit,placeHolder,searchQuery}: Props) => {
-
-  
+const SearchBar = ({onSubmit,placeHolder,searchQuery=""}: Props) => {
     const form = useForm<searchForm>({
         resolver: zodResolver(formSchema),
         defaultValues:{

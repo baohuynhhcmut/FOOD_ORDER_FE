@@ -1,23 +1,36 @@
 import { useGetCurrentUser, useUpdateMyUser } from "@/api/UserApi";
-import UserFormProfile from "@/form/UserFormProfile";
+import UserFormProfile, { userFormData } from "@/form/UserFormProfile";
+import { loadUser } from "@/store/slice/AuthSlice";
+import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const UserProfilePage = () => {
 
     const { updateUser ,isLoading:isLoadingUpdate } = useUpdateMyUser()
 
-    const { currentUser,isLoading:isLoadingGetCurUser } = useGetCurrentUser()
+    // const { currentUser,isLoading:isLoadingGetCurUser } = useGetCurrentUser()
 
-    // console.log(currentUser)
+    const data = useSelector((state:RootState) => state.user.user)
 
-    if(isLoadingGetCurUser){
-        return(
-            <span className="text-3xl text-orange-500 font-bold text-center">Loading data user ...</span>
-        )
+    const dispatch = useDispatch()
+
+    const onSave = async(data: userFormData) => { 
+        const updated = await updateUser(data)
+        dispatch(loadUser({user:updated.data}))
     }
 
+    // const isLoadingUpdate = false
+
+    // if(isLoadingGetCurUser){
+    //     return(
+    //         <span className="text-3xl text-orange-500 font-bold text-center">Loading data user ...</span>
+    //     )
+    // }
+
+
     return (
-        <UserFormProfile user={currentUser} onSave={updateUser} isLoading={isLoadingUpdate} />
+        <UserFormProfile user={data}  onSave={onSave} isLoading={isLoadingUpdate} />
     );
 }
 

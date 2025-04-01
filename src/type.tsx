@@ -3,7 +3,13 @@ export type menuItem = {
     _id:string;
     name:string;
     price:number;
+    imageMenu:any;
+    category:string;
+    status:string;
+    createdAt: string;
+    updatedAt: string;
 }
+
 
 export type restaurant = {
     _id:string;
@@ -16,7 +22,8 @@ export type restaurant = {
     cuisines: string[];
     menuItem: menuItem[];
     imageUrl: string;
-    lastUpdate: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 
@@ -54,9 +61,115 @@ export type CheckoutSessionRequest = {
       name: string;
       addressLine1: string;
       city: string;
-      country: string;
       email?: string | undefined;
     };
     restaurantId: string;
 };
 
+export type Order = {
+    _id:string;
+    restaurant: restaurant;
+    user:{
+        _id:string;
+        email:string;
+        name:string;
+        addressLine1:string;
+        city:string;
+        country:string;
+    }
+    cartItem: {
+        _id: string;
+        name:  string;
+        quantity: number;
+    }[];
+    totalAmout: number;
+    status: 'placed'| 'paid' | 'inProcess' | 'outForDelivery' | 'delivered';
+    createAt:string;
+}
+
+
+export type ProcessBar = () => {
+    
+}
+
+export type MenuRequest = {
+    item:string;
+    quantity:number;
+}
+
+export type Cart = MenuRequest[]
+
+export type PaymentRequest = {
+    orderList: MenuRequest[];
+    bankCode:string;
+}
+
+export type order = {
+    _id:string;
+    menu:[
+        {
+            item:{
+                _id:string;
+                name:string;
+                imageMenu:string;
+                price:number;
+                restaurant:{
+                    _id:string;
+                    restaurantName:string;
+                },
+                category:string;
+            },
+            quantity:number;
+        }
+    ];
+    status:string;
+    total: number;
+    bankCode: string;
+    email:string;
+    createdAt:string;
+    updatedAt:string;
+}
+
+export type restaurantClient = {
+    _id:string;
+    restaurantName:string;
+    cuisines: string[];
+    city:string;
+    deliveryPrice: number;
+    estimatedDeliveryTime: number;
+    imageUrl: string;
+    menuItem: menuItem[];
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export type ordersList = order[]
+
+export type paginationObj = {
+    page:number;
+    limit:number;
+    total:number;
+}
+
+export type searchObj = {
+    searchText: string;
+    sort:string[];
+    genre: string [];
+    status:string;
+}
+
+interface Notification {
+    title: string;
+    body: string;
+}
+  
+interface Data {
+type: string;
+orderId: string;
+amount: string;
+}
+  
+export interface MessageNotification {
+notification: Notification;
+data: Data;
+}
